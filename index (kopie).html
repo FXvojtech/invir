@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>INVIR</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+
+  <style>
+    :root{
+      --text:#d7d7d2;
+      --text-strong:#f2f2ee;
+      --muted:#9d9d97;
+      --line:rgba(255,255,255,0.07);
+      --panel:rgba(255,255,255,0.045);
+      --panel-2:rgba(255,255,255,0.03);
+      --button:#ededea;
+      --button-text:#070707;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    html, body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.045), transparent 24%),
+        radial-gradient(circle at 80% 90%, rgba(255,255,255,0.025), transparent 22%),
+        linear-gradient(180deg, #060606 0%, #020202 100%);
+      color:var(--text);
+      font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    .reveal{
+      cursor:pointer;
+      background:transparent;
+      font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    .reveal .slides{
+      text-align:center;
+    }
+
+    .reveal section{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:36px;
+      position:relative;
+      min-height:100vh;
+    }
+
+    .bg-brand{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      user-select:none;
+      font-size:170px;
+      font-weight:700;
+      letter-spacing:0.18em;
+      color:rgba(180,180,180,0.08);
+      text-transform:uppercase;
+      transform:translateY(-6px);
+      z-index:0;
+      text-shadow:0 0 40px rgba(255,255,255,0.02);
+    }
+
+    .shell{
+      width:min(960px, 92vw);
+      padding:54px 58px;
+      border-radius:30px;
+      position:relative;
+      z-index:1;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.03));
+      border:1px solid var(--line);
+      box-shadow:
+        0 32px 90px rgba(0,0,0,0.58),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+    }
+
+    .kicker{
+      margin:0 0 14px;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.26em;
+      color:var(--muted);
+    }
+
+    h1, h2{
+      margin:0;
+      color:var(--text-strong);
+      font-weight:620;
+      letter-spacing:-0.04em;
+      line-height:1.03;
+    }
+
+    h1{
+      font-size:54px;
+    }
+
+    h2{
+      font-size:42px;
+    }
+
+    .divider{
+      width:64px;
+      height:1px;
+      margin:20px auto 0;
+      background:var(--line);
+    }
+
+    .sub{
+      margin:18px auto 0;
+      max-width:720px;
+      font-size:22px;
+      line-height:1.5;
+      color:var(--text);
+    }
+
+    .sub strong,
+    .strong{
+      color:var(--text-strong);
+      font-weight:600;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+      margin-top:24px;
+    }
+
+    .card{
+      text-align:left;
+      padding:18px 18px 16px;
+      border-radius:18px;
+      background:var(--panel-2);
+      border:1px solid rgba(255,255,255,0.065);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    .card-mini{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.18em;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .card h3{
+      margin:0 0 8px;
+      font-size:23px;
+      color:var(--text-strong);
+      font-weight:600;
+      letter-spacing:-0.02em;
+      line-height:1.1;
+    }
+
+    .card p{
+      margin:0;
+      font-size:16px;
+      line-height:1.45;
+      color:var(--text);
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:22px;
+    }
+
+    .split{
+      padding:22px 18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.065);
+      background:var(--panel-2);
+    }
+
+    .split-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.18em;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .split-text{
+      font-size:22px;
+      line-height:1.45;
+      color:var(--text-strong);
+    }
+
+    .steps{
+      margin-top:22px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+    }
+
+    .step{
+      min-width:290px;
+      padding:13px 18px;
+      border-radius:999px;
+      background:var(--panel-2);
+      border:1px solid rgba(255,255,255,0.065);
+      color:var(--text-strong);
+      font-size:20px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      margin-top:22px;
+    }
+
+    .chip{
+      padding:11px 16px;
+      border-radius:999px;
+      background:var(--panel-2);
+      border:1px solid rgba(255,255,255,0.065);
+      color:var(--text);
+      font-size:18px;
+    }
+
+    table.clean{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:24px;
+      overflow:hidden;
+    }
+
+    table.clean th{
+      padding:14px 12px 15px;
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:0.14em;
+      font-weight:500;
+      border-bottom:1px solid var(--line);
+    }
+
+    table.clean td{
+      padding:15px 12px;
+      font-size:20px;
+      color:var(--text-strong);
+      border-bottom:1px solid rgba(255,255,255,0.055);
+    }
+
+    table.clean tr:last-child td{
+      border-bottom:none;
+    }
+
+    .cta{
+      display:inline-block;
+      margin-top:24px;
+      padding:16px 28px;
+      border-radius:999px;
+      text-decoration:none;
+      background:var(--button);
+      color:var(--button-text);
+      font-size:20px;
+      font-weight:700;
+      transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;
+      box-shadow:0 10px 30px rgba(255,255,255,0.08);
+    }
+
+    .cta:hover{
+      transform:translateY(-2px);
+      opacity:0.97;
+      box-shadow:0 14px 36px rgba(255,255,255,0.12);
+    }
+
+    .link{
+      margin-top:14px;
+      font-size:18px;
+      color:var(--muted);
+    }
+
+    .tiny{
+      margin-top:10px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    @media (max-width: 900px){
+      .bg-brand{
+        font-size:88px;
+      }
+
+      .shell{
+        padding:36px 22px;
+      }
+
+      h1{font-size:38px;}
+      h2{font-size:31px;}
+      .sub{font-size:18px;}
+      .grid-3,.grid-2{grid-template-columns:1fr;}
+      .step{min-width:0; width:100%;}
+      table.clean td{font-size:17px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">INVIR</p>
+          <h1>Nejde o produkty.<br>Jde o systém.</h1>
+          <div class="divider"></div>
+          <p class="sub">Většina lidí nakupuje.<br><strong>My na tom vyděláváme.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Realita</p>
+          <h2>Každý měsíc utrácíš peníze.</h2>
+          <p class="sub">Jídlo. Hygiena. Doplňky.<br><strong>A pokaždé vydělává někdo jiný.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Zlom</p>
+          <h2>Co kdyby ten tok šel k tobě?</h2>
+          <p class="sub">Ne víc práce.<br><strong>Jen jiný systém.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Co je Amway</p>
+          <h2>Globální firma<br>ve více než 100 zemích</h2>
+          <p class="sub">Stabilní. Funkční.<br>Ověřená desítkami let.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Používáš každý den</p>
+          <h2>Značky, které tvoří celý ekosystém.</h2>
+
+          <div class="grid-3">
+            <div class="card">
+              <div class="card-mini">Artistry</div>
+              <h3>Prémiová beauty</h3>
+              <p>Pleťová péče a kosmetika.<br>Např. sérum a hydratační péče.</p>
+            </div>
+
+            <div class="card">
+              <div class="card-mini">Nutrilite</div>
+              <h3>Vitamíny a doplňky</h3>
+              <p>Např. Double X a další doplňky pro každodenní režim.</p>
+            </div>
+
+            <div class="card">
+              <div class="card-mini">XS</div>
+              <h3>Energy &amp; performance</h3>
+              <p>Např. energy drink bez cukru a sportovní podpora výkonu.</p>
+            </div>
+          </div>
+
+          <p class="sub">Nepoužíváš jen produkty.<br><strong>Vstupuješ do systému, který je propojený.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Princip</p>
+
+          <div class="grid-2">
+            <div class="split">
+              <div class="split-label">Klasický svět</div>
+              <div class="split-text">Ty → koupíš → firma vydělá</div>
+            </div>
+
+            <div class="split">
+              <div class="split-label">Náš model</div>
+              <div class="split-text">Ty → používáš → firma platí tobě</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Jak to funguje</p>
+          <h2>3 kroky</h2>
+
+          <div class="steps">
+            <div class="step">1. Používáš</div>
+            <div class="step">2. Doporučíš</div>
+            <div class="step">3. Vzniká síť</div>
+          </div>
+
+          <p class="sub"><strong>A z obratu jde procento k tobě.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Body systém</p>
+          <h2>Každý produkt = body</h2>
+          <p class="sub">PV (Point Value) → tvoje aktivita<br>BV (Business Volume) → obrat skupiny</p>
+          <p class="sub"><strong>Body = výkon<br>Výkon = peníze</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Odměňovací systém</p>
+          <h2>Čím víc bodů, tím větší procento.</h2>
+
+          <table class="clean">
+            <thead>
+              <tr>
+                <th>Počet bodů (PV)</th>
+                <th>Procentuální úroveň odměny</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>200</td><td>3 %</td></tr>
+              <tr><td>600</td><td>6 %</td></tr>
+              <tr><td>1 200</td><td>9 %</td></tr>
+              <tr><td>2 400</td><td>12 %</td></tr>
+              <tr><td>4 000</td><td>15 %</td></tr>
+              <tr><td>7 000</td><td>18 %</td></tr>
+              <tr><td>10 000 a více</td><td>21 %</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Income logika</p>
+          <h2>Neprodáváš čas.<br>Buduješ systém.</h2>
+
+          <div class="chips">
+            <div class="chip">opakované nákupy</div>
+            <div class="chip">rostoucí síť</div>
+            <div class="chip">rostoucí income</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">LTS dovolené</p>
+          <h2>Firma odměňuje i životním stylem.</h2>
+
+          <div class="chips">
+            <div class="chip">Dubaj</div>
+            <div class="chip">Maledivy</div>
+            <div class="chip">Thajsko</div>
+            <div class="chip">Řecko</div>
+          </div>
+
+          <p class="sub"><strong>Výkon = zážitky, které si nekoupíš jen tak.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Pozvánka</p>
+          <h2>Chceš vědět víc?</h2>
+          <p class="sub">Každý měsíc — Karlín (Praha)</p>
+          <p class="sub">Konference a setkání, kde se řeší zkušenosti, systém i další růst.</p>
+          <p class="sub"><strong>Ozvi se. Domluvíme se.</strong></p>
+        </div>
+      </section>
+
+      <section>
+        <div class="bg-brand">AMWAY</div>
+        <div class="shell">
+          <p class="kicker">Telegram</p>
+          <h2>Všechno začíná jedním krokem.</h2>
+          <a class="cta" href="https://t.me/Vojtech_Sucharda" target="_blank" rel="noopener noreferrer">Přidej se</a>
+          <div class="link">t.me/Vojtech_Sucharda</div>
+          <div class="tiny">Klikni a přejdi rovnou do chatu.</div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      controls: false,
+      progress: false,
+      slideNumber: false,
+      center: true,
+      transition: 'fade',
+      backgroundTransition: 'fade',
+      keyboard: true,
+      touch: true,
+      overview: false
+    });
+
+    document.addEventListener('click', function(e){
+      const tag = e.target.tagName.toLowerCase();
+      if (tag !== 'a') {
+        Reveal.next();
+      }
+    });
+  </script>
+</body>
+</html>
