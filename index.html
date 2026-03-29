@@ -2,13 +2,15 @@
 <html lang="cs">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>INVIR</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
 
   <style>
     :root{
+      --bg-1:#060606;
+      --bg-2:#020202;
       --text:#d7d7d2;
       --text-strong:#f2f2ee;
       --muted:#9d9d97;
@@ -29,20 +31,39 @@
       margin:0;
       padding:0;
       width:100%;
-      height:100%;
+      min-height:100%;
       overflow:hidden;
       background:
         radial-gradient(circle at 20% 10%, rgba(255,255,255,0.045), transparent 24%),
         radial-gradient(circle at 80% 90%, rgba(255,255,255,0.025), transparent 22%),
-        linear-gradient(180deg, #060606 0%, #020202 100%);
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
       color:var(--text);
       font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
     }
 
+    body{
+      min-height:100vh;
+      min-height:100svh;
+      min-height:100dvh;
+    }
+
     .reveal{
+      width:100vw;
+      height:100vh;
+      height:100svh;
+      height:100dvh;
       cursor:pointer;
       background:transparent;
       font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    .reveal,
+    .reveal .slides,
+    .reveal .slides section{
+      width:100vw !important;
+      height:100vh !important;
+      height:100svh !important;
+      height:100dvh !important;
     }
 
     .reveal .slides{
@@ -50,12 +71,16 @@
     }
 
     .reveal section{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:36px;
       position:relative;
-      min-height:100vh;
+      display:flex !important;
+      align-items:center;
+      justify-content:center;
+      padding:
+        max(20px, env(safe-area-inset-top))
+        18px
+        max(20px, env(safe-area-inset-bottom))
+        18px;
+      overflow:hidden;
     }
 
     .bg-brand{
@@ -66,10 +91,10 @@
       justify-content:center;
       pointer-events:none;
       user-select:none;
-      font-size:170px;
+      font-size:clamp(72px, 18vw, 170px);
       font-weight:700;
       letter-spacing:0.18em;
-      color:rgba(180,180,180,0.08);
+      color:rgba(180,180,180,0.07);
       text-transform:uppercase;
       transform:translateY(-6px);
       z-index:0;
@@ -78,6 +103,7 @@
 
     .shell{
       width:min(960px, 92vw);
+      max-width:960px;
       padding:54px 58px;
       border-radius:30px;
       position:relative;
@@ -106,6 +132,7 @@
       font-weight:620;
       letter-spacing:-0.04em;
       line-height:1.03;
+      text-wrap:balance;
     }
 
     h1{
@@ -129,6 +156,7 @@
       font-size:22px;
       line-height:1.5;
       color:var(--text);
+      text-wrap:balance;
     }
 
     .sub strong,
@@ -203,6 +231,7 @@
       font-size:22px;
       line-height:1.45;
       color:var(--text-strong);
+      text-wrap:balance;
     }
 
     .steps{
@@ -269,9 +298,12 @@
     }
 
     .cta{
-      display:inline-block;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       margin-top:24px;
       padding:16px 28px;
+      min-height:56px;
       border-radius:999px;
       text-decoration:none;
       background:var(--button);
@@ -292,6 +324,7 @@
       margin-top:14px;
       font-size:18px;
       color:var(--muted);
+      word-break:break-word;
     }
 
     .tiny{
@@ -300,21 +333,167 @@
       color:var(--muted);
     }
 
+    .tap-hint{
+      position:absolute;
+      left:50%;
+      bottom:max(14px, env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:2;
+      font-size:12px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,0.36);
+      pointer-events:none;
+      user-select:none;
+    }
+
     @media (max-width: 900px){
       .bg-brand{
         font-size:88px;
       }
 
       .shell{
-        padding:36px 22px;
+        width:min(94vw, 680px);
+        padding:34px 22px;
+        border-radius:26px;
       }
 
-      h1{font-size:38px;}
+      h1{font-size:40px;}
       h2{font-size:31px;}
       .sub{font-size:18px;}
       .grid-3,.grid-2{grid-template-columns:1fr;}
       .step{min-width:0; width:100%;}
       table.clean td{font-size:17px;}
+    }
+
+    @media (max-width: 640px){
+      .reveal section{
+        padding:
+          max(14px, env(safe-area-inset-top))
+          14px
+          max(14px, env(safe-area-inset-bottom))
+          14px;
+      }
+
+      .bg-brand{
+        font-size:clamp(54px, 18vw, 74px);
+        letter-spacing:0.14em;
+        opacity:0.9;
+      }
+
+      .shell{
+        width:88vw;
+        max-width:88vw;
+        padding:24px 18px;
+        border-radius:22px;
+      }
+
+      .kicker{
+        margin-bottom:10px;
+        font-size:10px;
+        letter-spacing:0.22em;
+      }
+
+      h1{
+        font-size:34px;
+        line-height:1.02;
+      }
+
+      h2{
+        font-size:28px;
+        line-height:1.04;
+      }
+
+      .divider{
+        margin-top:16px;
+      }
+
+      .sub{
+        margin-top:14px;
+        font-size:16px;
+        line-height:1.45;
+      }
+
+      .card{
+        padding:16px 15px 14px;
+        border-radius:16px;
+      }
+
+      .card h3{
+        font-size:20px;
+      }
+
+      .card p{
+        font-size:14px;
+      }
+
+      .split{
+        padding:18px 15px;
+      }
+
+      .split-text{
+        font-size:18px;
+      }
+
+      .steps{
+        margin-top:18px;
+        gap:8px;
+      }
+
+      .step{
+        padding:12px 14px;
+        font-size:17px;
+      }
+
+      .chips{
+        margin-top:18px;
+        gap:8px;
+      }
+
+      .chip{
+        padding:10px 13px;
+        font-size:15px;
+      }
+
+      table.clean{
+        display:block;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      table.clean th{
+        font-size:10px;
+        letter-spacing:0.12em;
+        padding:11px 10px 12px;
+      }
+
+      table.clean td{
+        font-size:15px;
+        padding:12px 10px;
+        white-space:nowrap;
+      }
+
+      .cta{
+        width:100%;
+        margin-top:20px;
+        padding:15px 18px;
+        min-height:54px;
+        font-size:18px;
+      }
+
+      .link{
+        margin-top:12px;
+        font-size:16px;
+      }
+
+      .tiny{
+        font-size:13px;
+      }
+
+      .tap-hint{
+        font-size:10px;
+        bottom:max(10px, env(safe-area-inset-bottom));
+      }
     }
   </style>
 </head>
@@ -330,6 +509,7 @@
           <div class="divider"></div>
           <p class="sub">Většina lidí nakupuje.<br><strong>My na tom vyděláváme.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -339,6 +519,7 @@
           <h2>Každý měsíc utrácíš peníze.</h2>
           <p class="sub">Jídlo. Hygiena. Doplňky.<br><strong>A pokaždé vydělává někdo jiný.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -348,6 +529,7 @@
           <h2>Co kdyby ten tok šel k tobě?</h2>
           <p class="sub">Ne víc práce.<br><strong>Jen jiný systém.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -357,6 +539,7 @@
           <h2>Globální firma<br>ve více než 100 zemích</h2>
           <p class="sub">Stabilní. Funkční.<br>Ověřená desítkami let.</p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -387,6 +570,7 @@
 
           <p class="sub">Nepoužíváš jen produkty.<br><strong>Vstupuješ do systému, který je propojený.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -406,6 +590,7 @@
             </div>
           </div>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -422,6 +607,7 @@
 
           <p class="sub"><strong>A z obratu jde procento k tobě.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -432,6 +618,7 @@
           <p class="sub">PV (Point Value) → tvoje aktivita<br>BV (Business Volume) → obrat skupiny</p>
           <p class="sub"><strong>Body = výkon<br>Výkon = peníze</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -458,6 +645,7 @@
             </tbody>
           </table>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -472,6 +660,7 @@
             <div class="chip">rostoucí income</div>
           </div>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -489,6 +678,7 @@
 
           <p class="sub"><strong>Výkon = zážitky, které si nekoupíš jen tak.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -500,6 +690,7 @@
           <p class="sub">Konference a setkání, kde se řeší zkušenosti, systém i další růst.</p>
           <p class="sub"><strong>Ozvi se. Domluvíme se.</strong></p>
         </div>
+        <div class="tap-hint">tap pro další</div>
       </section>
 
       <section>
@@ -522,12 +713,19 @@
       controls: false,
       progress: false,
       slideNumber: false,
-      center: true,
+      center: false,
       transition: 'fade',
       backgroundTransition: 'fade',
       keyboard: true,
       touch: true,
-      overview: false
+      overview: false,
+      margin: 0,
+      width: "100%",
+      height: "100%",
+      minScale: 1,
+      maxScale: 1,
+      disableLayout: true,
+      hash: false
     });
 
     document.addEventListener('click', function(e){
